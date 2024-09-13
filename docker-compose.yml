@@ -1,0 +1,72 @@
+name: bitcoin-negociation-api
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+    ulimits:
+          nofile:
+              soft: 65536
+              hard: 65536
+    networks:
+      - spark-network
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS:  PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "cotacao:1:1"
+    depends_on:
+      - zookeeper
+    networks:
+      - spark-network
+
+  spark-master:
+    container_name: bitcoin-negociation-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bitcoin-negociation-api-image
+    entrypoint: ['./entrypoint.sh', 'master']
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - ./data/input:/opt/spark/bitcoin-negociation-api/data/input
+      - ./data/output:/opt/spark/bitcoin-negociation-api/data/output
+      - ./bitcoin-negociation-api:/opt/spark/bitcoin-negociation-api/bitcoin-negociation-api
+      - spark-logs:/opt/spark/spark-events
+    env_file:
+      - ./infra/docker/.env.spark
+    ports:
+      - '9091:8080'
+      - '7071:7077'
+    networks:
+      - spark-network
+
+  spark-worker:
+    image: bitcoin-negociation-api-image
+    entrypoint: ['./entrypoint.sh', 'worker']
+    depends_on:
+      - spark-master
+    env_file:
+      - ./infra/docker/.env.spark
+    volumes:
+      - ./data/input:/opt/spark/bitcoin-negociation-api/data/input
+      - ./data/output:/opt/spark/bitcoin-negociation-api/data/output
+      - spark-logs:/opt/spark/spark-events
+    networks:
+      - spark-network
+
+volumes:
+  spark-logs:
+
+networks:
+  spark-network:
+    driver: bridge

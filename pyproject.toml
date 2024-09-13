@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "bitcoin-negociation-api"
+version = "0.1.0"
+description = ""
+authors = ["felipewmartins"]
+
+[tool.poetry.dependencies]
+python = "3.11.9"
+pyspark = "^3.5.1"
+requests = "^2.32.3"
+kafka-python = "2.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
