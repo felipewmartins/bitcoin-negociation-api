@@ -12,6 +12,7 @@ class SparkBatchService(ISparkBatch):
         
         self.spark = SparkSession.builder \
             .appName("SparkBatchServiceJob") \
+            .config("spark.ui.port", "4050") \
             .getOrCreate()
         
     
@@ -41,3 +42,7 @@ class SparkBatchService(ISparkBatch):
         print(f"Removendo arquivos JSON da pasta '{self.input_dir}'...")
         shutil.rmtree(self.input_dir)
         os.makedirs(self.input_dir, exist_ok=True)
+        
+    def run(self):
+        df_grouped = self.process()
+        self.save(df_grouped)

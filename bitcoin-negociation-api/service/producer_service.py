@@ -19,7 +19,6 @@ class ProducerService(IProducerApi):
         
         try:
             response = req.get(self.api_url)
-            print(f'A URL USADA É ==>{self.api_url}')
             if response.status_code == 200:
                 return response.json()
             else:

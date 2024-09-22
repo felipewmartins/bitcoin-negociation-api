@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from pyspark.sql import DataFrame
 
 class ISparkWriter(ABC):
     
@@ -8,7 +7,7 @@ class ISparkWriter(ABC):
         pass;
     
     @abstractmethod
-    def save(self, dataframe: DataFrame):
+    def save(self, dataframe):
         pass;
     
     @abstractmethod

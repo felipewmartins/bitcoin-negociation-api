@@ -9,3 +9,7 @@ class ISparkBatch(ABC):
     @abstractmethod
     def save(self, dataframe):
         pass;
+    
+    @abstractmethod
+    def run(self):
+        pass;

@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from service.producer_service import ProducerService
 from service.spark_writer_service import SparkWriterService
+from service.spark_batch_service import SparkBatchService
 os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0,org.apache.kafka:kafka-clients:2.1.1 pyspark-shell'
 
 
@@ -20,11 +21,12 @@ def main():
     producer = ProducerService(kafka_servers, topic, api_url)
     writer = SparkWriterService(kafka_servers, topic, base_path)
     data = producer.fetch_api()  # Consome dados da API
-    print(data)
     if data is not None:
         producer.produce(data)
     
     writer.run()    
+    # print('Entrando no batch')
+    # batch.run()
     
 if __name__ == '__main__':
     main()
