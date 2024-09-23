@@ -2,6 +2,7 @@ import requests as req
 from kafka import KafkaProducer
 import json
 from interfaces.i_producer_api import IProducerApi
+import time
 
 class ProducerService(IProducerApi):
     def __init__(self, kafka_servers, topic, api_url, interval=60) -> None:
@@ -34,3 +35,11 @@ class ProducerService(IProducerApi):
             print(f"Dados enviados ao Kafka: {data}")
         except Exception as e:
             print(f"Erro ao enviar dados para o Kafka: {e}")
+
+    def run(self):
+        print(f'Enviando mensagens ao tópico ${self.topic}')
+        while True:
+            data = self.fetch_api()
+            if data is not None:
+                self.produce(data)
+            time.sleep(self.interval)

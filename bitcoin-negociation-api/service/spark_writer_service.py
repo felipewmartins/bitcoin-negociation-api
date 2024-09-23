@@ -14,6 +14,8 @@ class SparkWriterService(ISparkWriter):
         # Cria uma sessão Spark
         self.spark = SparkSession.builder \
             .appName("SparkWriterJob") \
+            .config("spark.executor.cores", "4") \
+            .config("spark.cores.max", "4") \
             .getOrCreate()
         
     def process(self):

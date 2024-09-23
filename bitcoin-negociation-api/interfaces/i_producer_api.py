@@ -10,3 +10,6 @@ class IProducerApi(ABC):
     @abstractmethod
     def produce(self, data):
         pass
+
+    def run(self):
+        pass

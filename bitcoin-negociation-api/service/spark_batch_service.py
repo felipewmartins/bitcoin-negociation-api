@@ -13,6 +13,7 @@ class SparkBatchService(ISparkBatch):
         self.spark = SparkSession.builder \
             .appName("SparkBatchServiceJob") \
             .config("spark.ui.port", "4050") \
+            .config("spark.cores.max", "4") \
             .getOrCreate()
         
     
@@ -35,13 +36,14 @@ class SparkBatchService(ISparkBatch):
 
         # Salva os dados no formato Parquet
         dataframe.write \
-            .mode("overwrite") \
+            .mode("append") \
             .parquet(self.output_dir)
 
-        # Remove os arquivos JSON da pasta de entrada
-        print(f"Removendo arquivos JSON da pasta '{self.input_dir}'...")
-        shutil.rmtree(self.input_dir)
-        os.makedirs(self.input_dir, exist_ok=True)
+        # Remove apenas os arquivos JSON da pasta de entrada
+        # print(f"Removendo arquivos JSON da pasta '{self.input_dir}'...")
+        # for file in os.listdir(self.input_dir):
+        #     if file.endswith(".json"):
+        #         os.remove(os.path.join(self.input_dir, file))
         
     def run(self):
         df_grouped = self.process()

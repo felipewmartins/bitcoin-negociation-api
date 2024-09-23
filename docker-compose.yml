@@ -45,8 +45,9 @@ services:
     env_file:
       - ./infra/docker/.env.spark
     ports:
-      - '9091:8080'
+      - '9091:9091'
       - '7071:7077'
+      - '8080:8080'
     networks:
       - spark-network
 
@@ -57,6 +58,8 @@ services:
       - spark-master
     env_file:
       - ./infra/docker/.env.spark
+    environment:
+      - SPARK_WORKER_CORES=4
     volumes:
       - ./data/input:/opt/spark/bitcoin-negociation-api/data/input
       - ./data/output:/opt/spark/bitcoin-negociation-api/data/output

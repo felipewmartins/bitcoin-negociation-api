@@ -11,22 +11,16 @@ os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka
 
 
 def main():
-    api_url = 'https://cointradermonitor.com/api/pbb/v1/ticker?exchanges=true'
     topic = "cotacao"
     kafka_servers = os.getenv('KAFKA_SERVERS', 'kafka:9092')
     base_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "../data/input")
     )
-    print('Entrando no producer')
-    producer = ProducerService(kafka_servers, topic, api_url)
+    print('Entrando no writer')
     writer = SparkWriterService(kafka_servers, topic, base_path)
-    data = producer.fetch_api()  # Consome dados da API
-    if data is not None:
-        producer.produce(data)
+        
     
     writer.run()    
-    # print('Entrando no batch')
-    # batch.run()
     
 if __name__ == '__main__':
     main()
