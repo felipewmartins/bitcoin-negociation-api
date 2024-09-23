@@ -99,3 +99,4 @@ pyrightconfig.json
 # Spark metadata
 _spark_metadata/
 checkpoint/
+bitcoin-negociation-api/interfaces/__pycache__/

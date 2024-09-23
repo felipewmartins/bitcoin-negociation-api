@@ -14,7 +14,7 @@ def load_parquet_files(path):
     return pd.concat(df_list, ignore_index=True)
 
 def aggregate_data(df):
-    aggregated_df = df.groupby("name")["average_last"].mean().reset_index()  # Média do valor 'last' por exchange
+    aggregated_df = df.groupby("name")["average_last"].mean().reset_index()
     return aggregated_df
 
 def create_plot(df):
@@ -23,7 +23,7 @@ def create_plot(df):
 
 st.title("Dashboard de Negociações de Bitcoin")
 
-parquet_directory = "../../data/output"  # Ajuste o caminho conforme necessário
+parquet_directory = "../../data/output"
 
 data = load_parquet_files(parquet_directory)
 
